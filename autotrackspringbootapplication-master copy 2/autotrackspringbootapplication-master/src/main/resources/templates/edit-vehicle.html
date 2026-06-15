@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Edit Vehicle - Autotrack</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    
+    <style>
+        body {
+            min-height: 100vh;
+            background-color: #f8f9fc;
+            color: #5a5c69;
+            font-family: 'Nunito', sans-serif;
+        }
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            background-color: #4e73df;
+            padding-top: 60px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .sidebar a {
+            display: block;
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            padding-top: 80px; 
+        }
+        /* Navbar */
+        .navbar {
+            background-color: #fff !important;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+            margin-left: 250px;
+            height: 70px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .sidebar a span {
+                display: none;
+            }
+            .main-content, .navbar {
+                margin-left: 70px;
+            }
+        }
+        
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-control {
+            border-radius: 10rem;
+            padding: 0.75rem 1.25rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="px-4 d-flex justify-content-between w-100">
+        <span class="navbar-brand mb-0 h1 text-primary fw-bold">Autotrack Edit Vehicle</span>
+        <div>
+            <a class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold" th:href="@{/logout}">
+                <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="text-center mb-4 mt-2">
+        <h4 class="text-white fw-bold d-none d-md-block">Autotrack</h4>
+        <i class="fas fa-car text-white fa-2x d-md-none"></i>
+    </div>
+    <hr class="sidebar-divider bg-light opacity-25">
+    <a th:href="@{/dashboard}">
+        <i class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span>
+    </a>
+    <a th:href="@{/add-vehicle}">
+        <i class="fas fa-fw fa-plus-circle"></i> <span>Add Vehicle</span>
+    </a>
+    <a th:href="@{/view-vehicles}" class="active" style="background-color: rgba(255,255,255,0.1);">
+        <i class="fas fa-fw fa-car"></i> <span>My Vehicles</span>
+    </a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800 fw-bold">Edit Vehicle Details</h1>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header py-3 bg-warning text-white" style="border-radius: 0.5rem 0.5rem 0 0;">
+                    <h6 class="m-0 font-weight-bold text-dark"><i class="fas fa-edit me-2"></i> Update Vehicle Details</h6>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/update-vehicle}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="id" th:value="${vehicle.id}"/>
+                        <input type="hidden" name="status" th:value="${vehicle.status}"/>
+                        <div class="mb-3">
+                            <label class="form-label ms-1">Vehicle Registration Number</label>
+                            <input type="text" class="form-control" name="vehicleNo" placeholder="e.g. MH 12 AB 1234" required th:value="${vehicle.vehicleNo}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label ms-1">Owner Full Name</label>
+                            <input type="text" class="form-control" name="ownerName" placeholder="John Doe" required th:value="${vehicle.ownerName}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label ms-1">PUC Expiry Details</label>
+                            <input type="date" class="form-control" name="pucDetails" required th:value="${vehicle.pucDetails}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label ms-1">Insurance Details / Expiry</label>
+                            <input type="date" class="form-control" name="insuranceDetails" required th:value="${vehicle.insuranceDetails}">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label ms-1">Upload New RC Book Image (Optional)</label>
+                            <input type="file" class="form-control" name="rcBookImageFile" accept="image/*" th:required="${vehicle.rcBookImageBase64 == null}">
+                            <small class="form-text text-danger mt-2 d-block fw-bold">
+                                *Warning: Uploading an incorrect or fake RC Book image will result in the permanent deletion of your vehicle details.
+                            </small>
+                            <div th:if="${vehicle.rcBookImageBase64 != null}" class="mt-2">
+                                <span class="badge bg-secondary mb-1">Current RC Book Image</span><br/>
+                                <img th:src="${vehicle.rcBookImageBase64}" style="max-height: 100px; border-radius: 5px;"/>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning rounded-pill w-100 py-2 fw-bold text-uppercase">
+                            <i class="fas fa-save me-1"></i> Update Vehicle
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

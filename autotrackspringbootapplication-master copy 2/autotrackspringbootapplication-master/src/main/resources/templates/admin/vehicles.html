@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicles - Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #1f1f1f !important;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            background-color: #1f1f1f;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #e0e0e0;
+            padding: 12px 20px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background-color: #333;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+
+        /* Table */
+        .table {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+
+        .table thead {
+            background-color: #333;
+        }
+
+        .form-control {
+            background-color: #1e1e1e;
+            color: #fff;
+            border: 1px solid #333;
+        }
+
+        .form-control::placeholder {
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+        <span class="navbar-brand">Autotrack Admin</span>
+        <a class="btn btn-light btn-sm" th:href="@{/admin/logout}">Logout</a>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <a th:href="@{/admin/dashboard}">Dashboard</a>
+    <a th:href="@{/admin/users}">Users</a>
+    <a th:href="@{/admin/vehicles}">Vehicles</a>
+<!--    <a th:href="@{/admin/settings}">Settings</a>-->
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+
+    <h2>Vehicles Management</h2>
+
+    <!-- Search -->
+    <form class="d-flex mb-3" method="get" th:action="@{/admin/vehicles}">
+        <input class="form-control me-2" type="search" name="keyword"
+               placeholder="Search by Vehicle Number/Owner Email" th:value="${keyword}">
+        <button class="btn btn-outline-light">Search</button>
+    </form>
+
+    <!-- Table -->
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Vehicle Number</th>
+            <th>Owner Email</th>
+            <th>Status</th>
+            <th>PUC Expiry</th>
+            <th>Insurance Expiry</th>
+            <th>RC Book Doc</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="v : ${vehicles}">
+            <td th:text="${v.vehicleNo} ?: '-'"></td>
+            <td th:text="${v.userEmail} ?: 'N/A'"></td>
+            <td>
+                <span th:class="${v.status == 'Active' ? 'badge bg-success' : 'badge bg-danger'}" th:text="${v.status}">Active</span>
+            </td>
+            <td th:text="${v.pucDetails} ?: '-'"></td>
+            <td th:text="${v.insuranceDetails} ?: '-'"></td>
+            <td>
+                <a th:if="${v.rcBookImageBase64 != null}" th:href="${v.rcBookImageBase64}" target="_blank">
+                    <img th:src="${v.rcBookImageBase64}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" title="View RC Book">
+                </a>
+                <span th:if="${v.rcBookImageBase64 == null}" class="text-muted small">N/A</span>
+            </td>
+            <td>
+                <a th:href="@{'/admin/vehicles/delete/' + ${v.id}}"
+                   class="btn btn-danger btn-sm"
+                   title="Delete Vehicle">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
